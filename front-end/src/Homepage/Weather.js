@@ -1,61 +1,87 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
-import { rapidKey } from "./key";
+import rapidKey from "../key";
 
 const Weather = () => {
-  const [weather, setWeather] = useState(null);
+    const [weather, setWeather] = useState(null);
+    const [location, setLocation] = useState(null);
+    const url = 'https://weatherapi-com.p.rapidapi.com/current.json?q=40.2%2C116.2';
+    const timezoneapi = async () => {
+        const timzoneurl = 'https://weatherapi-com.p.rapidapi.com/timezone.json?q=%3CREQUIRED%3E';
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': 'f5d68fb533msh0d9375110c6709dp16f5cfjsna0cb3407c4dc',
+                'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com'
+            }
+        };
 
-  useEffect(() => {
-    fetch(
-      "https://weatherbit-v1-mashape.p.rapidapi.com/current?lon=-73.5673&lat=45.5017",
-      {
-        method: "GET",
-        headers: {
-          "x-rapidapi-key": rapidKey,
-          "x-rapidapi-host": "weatherbit-v1-mashape.p.rapidapi.com",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((response) => {
-        console.log(response.data[0]);
-        setWeather(response.data[0]);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
-  if (weather) {
-    return (
-      <Content>
-        <TempBox>
-          <CurrentTemp>
-            <TempNum>{parseInt(weather.temp)}</TempNum>
-            <Exponent>°c</Exponent>
-          </CurrentTemp>
-          <FeelsLike>FEELS LIKE:</FeelsLike>
-          <AppTemp>{parseInt(weather.app_temp)}°c</AppTemp>
-        </TempBox>
-        {weather ? (
-          <img
-            src={`https://www.weatherbit.io/static/img/icons/${weather.weather.icon}.png`}
-            alt="weather icon"
-          />
-        ) : null}
+        try {
+            const response = await fetch(timzoneurl, options);
+            const result = await response.text();
+            console.log(result);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        // timezoneapi();
+        fetch(
+            // "https://weatherbit-v1-mashape.p.rapidapi.com/current?lon=-73.5673&lat=45.5017",
+            url,
+            {
+                method: "GET",
+                headers: {
+                    "x-rapidapi-key": rapidKey,
+                    // "x-rapidapi-host": "weatherbit-v1-mashape.p.rapidapi.com",
+                    "x-rapidapi-host": "weatherapi-com.p.rapidapi.com",
+                },
+            }
+        )
+            .then((res) => res.json())
+            .then((response) => {
+                if (response.current) {
+                    console.log(response.current);
+                    console.log(response.location);
+                    setLocation(response.location);
+                    setWeather(response.current);
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }, []);
+    if (weather) {
+        return (
+            <Content>
+                <TempBox>
+                    <CurrentTemp>
+                        <TempNum>{parseInt(weather.temp_c)}</TempNum>
+                        <Exponent>°c</Exponent>
+                    </CurrentTemp>
+                    <FeelsLike>FEELS LIKE:</FeelsLike>
+                    <AppTemp>{parseInt(weather.feelslike_c)}°c</AppTemp>
+                </TempBox>
+                {weather ? (
+                    <img
+                        src={`https://www.weatherbit.io/static/img/icons/${weather.condition.icon}`}
+                        alt="weather icon"
+                    />
+                ) : null}
 
-        <InfoBox>
-          <Description>{weather.weather.description}</Description>
-          <Info>
-            <div>Humidity: {weather.rh}%</div>
-            <div>Precipitation: {weather.precip} mm/h</div>
-            <div>Snow: {weather.snow} mm/h</div>
-          </Info>
-        </InfoBox>
-      </Content>
-    );
-  } else {
-    return <div>Loading weather.</div>;
-  }
+                <InfoBox>
+                    <Description>{(location.name + ", " + location.country)}</Description>
+                    <Info>
+                        <div>Humidity: {weather.humidity}%</div>
+                        <div>Precipitation: {weather.precip_mm} mm/h</div>
+                        <div>Wind Speed: {weather.wind_kph} mm/h</div>
+                    </Info>
+                </InfoBox>
+            </Content>
+        );
+    } else {
+        return <div>Loading weather.</div>;
+    }
 };
 const Content = styled.div`
   display: flex;

@@ -1,0 +1,43 @@
+{
+  "_id": "2ff9d3c0-b1b4-4ceb-92a7-d51e01d6ba32",
+  "kind": "calendar-event",
+  "title": "pick up female cousin at railway station",
+  "description": "happy hour",
+  "location": "Beijing, China",
+  "creator": {
+    "name": "Vanessa Chan",
+    "userId": "009"
+  },
+  "start": {
+    "date": "2023-06-09T16:00:00.000Z",
+    "time": {
+      "hours": "05",
+      "minutes": "20",
+      "ap": "PM",
+      "allday": false
+    }
+  },
+  "end": {
+    "date": "2023-06-09T16:00:00.000Z",
+    "time": {
+      "hours": "07",
+      "minutes": "25",
+      "ap": "PM",
+      "allday": false
+    }
+  },
+  "reminders": []
+}
+
+//存储格式： yyyy-MM-dd'T'HH:mm:ss.SSS'Z', new Date().toLocaleTimeString
+
+{
+  "name": "Changping",
+  "region": "Beijing",
+  "country": "China",
+  "lat": 40.2,
+  "lon": 116.2,
+  "tz_id": "Asia/Shanghai",
+  "localtime_epoch": 1686332927,
+  "localtime": "2023-06-10 1:48"
+}

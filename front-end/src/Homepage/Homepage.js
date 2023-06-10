@@ -1,98 +1,112 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
-import { COLORS } from "../Constants";
-import { format } from "date-fns";
-import { GoCalendar } from "react-icons/go";
-import { BiCalendarWeek, BiTimer } from "react-icons/bi";
-import { MdToday } from "react-icons/md";
-
-import NewsFeed from "./NewsFeed";
+import {useHistory} from "react-router-dom";
+import {COLORS} from "../Constants";
+import {format} from "date-fns";
+import {GoCalendar} from "react-icons/go";
+import {BiCalendarWeek} from "react-icons/bi";
+import {MdToday} from "react-icons/md";
 import plannerLogo from "./planner_logo.png";
 import NewEventDialog from "../Components/NewEventDialog";
 import Weather from "./Weather";
 
+//const server_url = 'http://localhost:8001';
+import {server_url} from "../key";
+
 const Homepage = () => {
-  const today = new Date();
-  const history = useHistory();
+    const today = new Date();
+    const history = useHistory();
 
-  const [dayEvents, setDayEvents] = useState([]);
+    const [dayEvents, setDayEvents] = useState([]);
 
-  useEffect(() => {
-    fetch(`/events/date/${format(today, "yyyy-MM-dd")}`)
-      .then((res) => res.json())
-      .then((res) => {
-        setDayEvents(res.data);
-        console.log("Today's events: ", res.data);
-      })
-      .catch((error) => console.log("error!", error));
-  }, []);
+    useEffect(() => {
+        // fetch(`${server_url}/events/date/${format(today, "yyyy-MM-dd")}`)
+        //   .then((res) => res.json())
+        //   .then((res) => {
+        //     setDayEvents(res.data);
+        //     console.log("Today's events: ", res.data);
+        //   })
+        //   .catch((error) => console.log("error!", error));
+        getDayEvents();
+    }, []);
 
-  let greeting = "";
-  if (today.getHours() < 12) {
-    greeting = "Good morning!";
-  } else if (today.getHours() < 18) {
-    greeting = "Good afternoon!";
-  } else {
-    greeting = "Good evening!";
-  }
+    const getDayEvents = () => {
+        fetch(`${server_url}/events/date/${format(today, "yyyy-MM-dd")}`)
+            .then((res) => res.json())
+            .then((res) => {
+                setDayEvents(res.data);
+                console.log("Today's events: ", res.data);
+            })
+            .catch((error) => console.log("error!", error));
+    }
 
-  return (
-    <Wrapper>
-      <TopBanner>
-        <Logo src={plannerLogo} />
-        <Greeting>
-          <Welcome>{greeting}</Welcome>
-          <MainDate>
-            It's {format(today, "EEEE, LLLL do").toLowerCase()}.
-          </MainDate>
-        </Greeting>
-      </TopBanner>
-      <Events>
-        <SectionTitle>Preview of your day</SectionTitle>
-        {dayEvents.length === 0 ? (
-          <NothingPlanned>Nothing planned for today. Lucky you!</NothingPlanned>
-        ) : (
-          dayEvents.map((ev) => {
-            return (
-              <EventLine>
-                <EventHour>
-                  {parseInt(ev.start.time.hours)}:{ev.start.time.minutes}{" "}
-                  {ev.start.time.ap.toLowerCase()}
-                </EventHour>
-                <EventTitle>{ev.title}</EventTitle>
-              </EventLine>
-            );
-          })
-        )}
-      </Events>
-      <SectionTitle>Explore your planner</SectionTitle>
-      <ActionSec>
-        <ActionIcon
-          onClick={(ev) => {
-            history.push(`/date/${format(today, "y-MM-dd")}`);
-          }}
-        >
-          <MdToday size="40" color={`${COLORS.icon1}`} />
-          <IconText>Today</IconText>
-        </ActionIcon>
-        <ActionIcon
-          onClick={() => history.push(`/week/${format(today, "y-MM-dd")}`)}
-        >
-          <BiCalendarWeek size="40" color={`${COLORS.icon1}`} />
-          <IconText>Week</IconText>
-        </ActionIcon>
-        <ActionIcon onClick={() => history.push("/calendar-month")}>
-          <GoCalendar size="40" color={`${COLORS.icon1}`} />
-          <IconText>Month</IconText>
-        </ActionIcon>
-      </ActionSec>
-      <Focus>Focus Mode</Focus>
-      <Weather />
-      <NewsFeed today={today} />
-      <NewEventDialog />
-    </Wrapper>
-  );
+    let greeting = "";
+    if (today.getHours() < 12) {
+        greeting = "Good morning!";
+    } else if (today.getHours() < 18) {
+        greeting = "Good afternoon!";
+    } else {
+        greeting = "Good evening!";
+    }
+
+    return (
+        <Wrapper>
+            <TopBanner>
+                <Logo src={plannerLogo}/>
+                <Greeting>
+                    <Welcome>{greeting}</Welcome>
+                    <MainDate>
+                        It's {format(today, "EEEE, LLLL do").toLowerCase()}.
+                    </MainDate>
+                </Greeting>
+            </TopBanner>
+            <Events>
+                <SectionTitle>Preview of your day</SectionTitle>
+                {dayEvents.length === 0 ? (
+                    <NothingPlanned>Nothing planned for today. Lucky you!</NothingPlanned>
+                ) : (
+                    dayEvents.map((ev, index) => {
+                        return (
+                            <EventLine key={'eventline-' + index}>
+                                <EventHour key={'eventhour-' + index}>
+                                    {
+                                        ev.start.time.allday ? ("ALL Day") : parseInt(ev.start.time.hours) + ':' +
+                                            parseInt(ev.start.time.minutes) + ev.start.time.ap.toLowerCase()
+                                    }
+                                </EventHour>
+                                <EventTitle key={'eventitle-' + index}>{ev.title}</EventTitle>
+                            </EventLine>
+                        );
+                    })
+                )}
+            </Events>
+            <SectionTitle>Explore your planner</SectionTitle>
+            <ActionSec>
+                <ActionIcon
+                    onClick={(ev) => {
+                        history.push(`/date/${format(today, "y-MM-dd")}`);
+                    }}
+                >
+                    <MdToday size="40" color={`${COLORS.icon1}`}/>
+                    <IconText>Today</IconText>
+                </ActionIcon>
+                <ActionIcon
+                    onClick={() => history.push(`/week/${format(today, "y-MM-dd")}`)}
+                >
+                    <BiCalendarWeek size="40" color={`${COLORS.icon1}`}/>
+                    <IconText>Week</IconText>
+                </ActionIcon>
+                <ActionIcon onClick={() => history.push("/calendar-month")}>
+                    <GoCalendar size="40" color={`${COLORS.icon1}`}/>
+                    <IconText>Month</IconText>
+                </ActionIcon>
+            </ActionSec>
+            <Focus>Focus Mode</Focus>
+            <Weather/>
+            {/*<NewsFeed today={today}/>*/}
+            <NewEventDialog refreshEvents={getDayEvents}/>
+        </Wrapper>
+    );
 };
 const Focus = styled.div`
   background-color: #4d4caa;

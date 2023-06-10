@@ -1,0 +1,72 @@
+[
+  {
+    "date": "2023-06-08T12:26:02.431Z",
+    "events": [
+      {
+        "_id": "7010d307-964a-4543-ab5d-f98eb6b69788",
+        "kind": "calendar-event",
+        "title": "test1",
+        "description": "test1",
+        "location": "Beijing, China",
+        "creator": {
+          "name": "Vanessa Chan",
+          "userId": "009"
+        },
+        "start": {
+          "date": "2023-06-08T12:26:02.431Z",
+          "time": {
+            "hours": null,
+            "minutes": null,
+            "ap": null,
+            "allday": true
+          }
+        },
+        "end": {
+          "date": "2023-06-08T16:00:00.000Z",
+          "time": {
+            "hours": null,
+            "minutes": null,
+            "ap": null,
+            "allday": true
+          }
+        },
+        "reminders": []
+      }
+    ]
+  },
+  {
+    "date": "2023-06-10T16:00:00.024Z",
+    "events": [
+      {
+        "_id": "2ff9d3c0-b1b4-4ceb-92a7-d51e01d6ba32",
+        "kind": "calendar-event",
+        "title": "pick up female cousin at railway station",
+        "description": "happy hour",
+        "location": "Beijing, China",
+        "creator": {
+          "name": "Vanessa Chan",
+          "userId": "009"
+        },
+        "start": {
+          "date": "2023-06-10T16:00:00.024Z",
+          "time": {
+            "hours": "05",
+            "minutes": "35",
+            "ap": "PM",
+            "allday": false
+          }
+        },
+        "end": {
+          "date": "2023-06-10T16:00:00.024Z",
+          "time": {
+            "hours": "07",
+            "minutes": "25",
+            "ap": "PM",
+            "allday": false
+          }
+        },
+        "reminders": []
+      }
+    ]
+  }
+]

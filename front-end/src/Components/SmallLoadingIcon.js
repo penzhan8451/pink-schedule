@@ -1,16 +1,16 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
+import styled, {keyframes} from "styled-components";
 
-import { ImSpinner2 } from "react-icons/im";
+import {ImSpinner2} from "react-icons/im";
 
 const SmallLoadingIcon = () => {
-  return (
-    <SectionBox>
-      <StyledIcon>
-        <ImSpinner2 size="25" />
-      </StyledIcon>
-    </SectionBox>
-  );
+    return (
+        <SectionBox>
+            <StyledIcon>
+                <ImSpinner2 size="25"/>
+            </StyledIcon>
+        </SectionBox>
+    );
 };
 
 export default SmallLoadingIcon;

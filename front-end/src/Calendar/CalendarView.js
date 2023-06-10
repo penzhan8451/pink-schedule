@@ -1,114 +1,119 @@
-import React, { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import { COLORS, dateColors } from "../Constants";
+import React, {useEffect, useState} from "react";
+import styled, {keyframes} from "styled-components";
+import {COLORS, dateColors} from "../Constants";
 import MyCalendar from "./MyCalendar";
 import NewEventDialog from "../Components/NewEventDialog";
-import { useHistory } from "react-router-dom";
-import { format } from "date-fns";
-import { AiOutlineHome } from "react-icons/ai";
-import { BiArrowBack } from "react-icons/bi";
+import {useHistory} from "react-router-dom";
+import {format} from "date-fns";
+import {AiOutlineHome} from "react-icons/ai";
+import {BiArrowBack} from "react-icons/bi";
 import noEventToday from "./img.png";
 
+import {server_url} from "../key";
+
 const CalendarView = () => {
-  const history = useHistory();
-  const [status, setStatus] = useState("loading");
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-  const [MonthEvents, setMonthEvents] = useState([]);
+    const history = useHistory();
+    const [status, setStatus] = useState("loading");
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+    const [MonthEvents, setMonthEvents] = useState([]);
 
-  // Handle function to pass to MyCalendar
-  const updateCurrentMonth = (month) => setCurrentMonth(month);
+    // Handle function to pass to MyCalendar
+    const updateCurrentMonth = (month) => setCurrentMonth(month);
 
-  useEffect(() => {
-    setStatus("loading");
-    fetch(`/events/month/${currentMonth}`)
-      .then((res) => res.json())
-      .then((res) => {
-        setMonthEvents(res.data);
-        setStatus("idle");
-      })
-      .catch((error) => console.log("error!", error));
-  }, [currentMonth]);
+    useEffect(() => {
+        setStatus("loading");
+        fetch(`${server_url}/events/month/${currentMonth}`)
+            .then((res) => res.json())
+            .then((res) => {
+                // console.log("CalendarView-useEffect-Month-Events:\t" + JSON.stringify(res.data));
+                setMonthEvents(res.data);
+                setStatus("idle");
+            })
+            .catch((error) => console.log("error!", error));
+    }, [currentMonth]);
 
-  let colorIndex = -1;
+    let colorIndex = -1;
 
-  const getEventsAfterCreate = async () => {
-    setStatus("loading");
+    const getEventsAfterCreate = async () => {
+        setStatus("loading");
 
-    await fetch(`/events/month/${currentMonth}`)
-      .then((res) => res.json())
-      .then((res) => {
-        setMonthEvents(res.data);
-        setStatus("idle");
-      })
-      .catch((error) => console.log("error!", error));
-  };
+        await fetch(`${server_url}/events/month/${currentMonth}`)
+            .then((res) => res.json())
+            .then((res) => {
+                console.log("CalendarView-getEventsAfterCreate-Month-Events:\t" + JSON.stringify(res.data));
+                setMonthEvents(res.data);
+                setStatus("idle");
+            })
+            .catch((error) => console.log("error!", error));
+    };
 
-  return (
-    <Wrapper>
-      <NewEventDialog refreshEvents={getEventsAfterCreate} />
+    return (
+        <Wrapper>
+            <NewEventDialog refreshEvents={getEventsAfterCreate}/>
 
-      <Tabs>
-        <NavIcon>
-          <AiOutlineHome onClick={() => history.push("/")} size={30} />
-        </NavIcon>
-        <NavIcon>
-          <BiArrowBack onClick={() => history.goBack()} size={30} />
-        </NavIcon>
-        <TabItem onClick={() => history.push("/calendar-month")}>month</TabItem>
-        <TabItem
-          onClick={() => history.push(`/week/${format(new Date(), "y-MM-dd")}`)}
-          style={{ backgroundColor: "#b5cdfd" }}
-        >
-          week
-        </TabItem>
-        <TabItem
-          style={{ backgroundColor: "#b5cdfd" }}
-          onClick={() => history.push(`/date/${format(new Date(), "y-MM-dd")}`)}
-        >
-          Day
-        </TabItem>
-      </Tabs>
-      <MyCalendar updateCurrentMonth={updateCurrentMonth} />
+            <Tabs>
+                <NavIcon>
+                    <AiOutlineHome onClick={() => history.push("/")} size={30}/>
+                </NavIcon>
+                <NavIcon>
+                    <BiArrowBack onClick={() => history.goBack()} size={30}/>
+                </NavIcon>
+                <TabItem onClick={() => history.push("/calendar-month")}>month</TabItem>
+                <TabItem
+                    onClick={() => history.push(`/week/${format(new Date(), "y-MM-dd")}`)}
+                    style={{backgroundColor: "#b5cdfd"}}
+                >
+                    week
+                </TabItem>
+                <TabItem
+                    style={{backgroundColor: "#b5cdfd"}}
+                    onClick={() => history.push(`/date/${format(new Date(), "y-MM-dd")}`)}
+                >
+                    Day
+                </TabItem>
+            </Tabs>
+            <MyCalendar updateCurrentMonth={updateCurrentMonth}/>
 
-      {status === "loading" ? null : (
-        <>
-          {MonthEvents.length === 0 ? (
-            <NoEventsSection>
-              <p>You have nothing planned!</p>
-              <p>Tap " + " to add a task.</p>
-              <AddEventImg src={noEventToday} alt="Add fun activities" />
-            </NoEventsSection>
-          ) : null}
-          <EventsSection>
-            {MonthEvents.map((ev) => (
-              <EventBox
-                onClick={() =>
-                  history.push(`/date/${format(new Date(ev.date), "y-MM-dd")}`)
-                }
-              >
-                <DateBox style={{ backgroundColor: dateColors[++colorIndex] }}>
-                  <div className="dayName">
-                    {format(new Date(ev.date), "EEE.")}
-                  </div>
-                  <div className="dayNum">{format(new Date(ev.date), "d")}</div>
-                </DateBox>
-                <DayEventsBox>
-                  {ev.events.map((meeting) => (
-                    <div>
-                      <EventTitle style={{ color: dateColors[colorIndex] }}>
-                        {"‣ "}
-                        {meeting.title}
-                      </EventTitle>
-                    </div>
-                  ))}
-                </DayEventsBox>
-              </EventBox>
-            ))}
-          </EventsSection>
-        </>
-      )}
-    </Wrapper>
-  );
+            {status === "loading" ? null : (
+                <>
+                    {MonthEvents.length === 0 ? (
+                        <NoEventsSection>
+                            <p>You have nothing planned!</p>
+                            <p>Tap " + " to add a task.</p>
+                            <AddEventImg src={noEventToday} alt="Add fun activities"/>
+                        </NoEventsSection>
+                    ) : null}
+                    <EventsSection>
+                        {MonthEvents.map((ev, index) => (
+                            <EventBox key={'eventbox-' + index}
+                                      onClick={() =>
+                                          history.push(`/date/${format(new Date(ev.date), "y-MM-dd")}`)
+                                      }
+                            >
+                                <DateBox key={'datebox-' + index} style={{backgroundColor: dateColors[++colorIndex]}}>
+                                    <div className="dayName">
+                                        {format(new Date(ev.date), "EEE.")}
+                                    </div>
+                                    <div className="dayNum">{format(new Date(ev.date), "d")}</div>
+                                </DateBox>
+                                <DayEventsBox key={'dayeventsbox-' + index}>
+                                    {ev.events.map((meeting, index) => (
+                                        <div key={'eventtitle-div-' + index}>
+                                            <EventTitle key={'eventtitle-' + index}
+                                                        style={{color: dateColors[colorIndex]}}>
+                                                {"‣ "}
+                                                {meeting.title}
+                                            </EventTitle>
+                                        </div>
+                                    ))}
+                                </DayEventsBox>
+                            </EventBox>
+                        ))}
+                    </EventsSection>
+                </>
+            )}
+        </Wrapper>
+    );
 };
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -154,13 +159,13 @@ const AddEventImg = styled.img`
 
 const EventsSection = styled.div``;
 const slideUpAnimation = keyframes`
-    from {
+  from {
     margin-top: 100%;
     opacity: 0;
   }
   to {
     margin-top: 0%;
-    opacity:0.4;
+    opacity: 0.4;
   }
 `;
 const EventBox = styled.div`
@@ -183,6 +188,7 @@ const DateBox = styled.div`
     font-size: 1rem;
     line-height: 1rem;
   }
+
   .dayNum {
     color: ${COLORS.text2};
   }

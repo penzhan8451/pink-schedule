@@ -1,5 +1,6 @@
-import { createGlobalStyle } from "styled-components";
-import { COLORS } from "./Constants";
+import {createGlobalStyle} from "styled-components";
+import {COLORS} from "./Constants";
+
 export default createGlobalStyle`
 
 html, div, span, applet, object, iframe,

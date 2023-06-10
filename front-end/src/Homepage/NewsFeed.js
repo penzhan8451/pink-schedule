@@ -1,74 +1,84 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
-import { format } from "date-fns";
-import { dayColors } from "../Constants";
-import { rapidKey } from "./key";
+import {format} from "date-fns";
+import {dayColors} from "../Constants";
+import rapidKey from "../key";
 
-const NewsFeed = ({ today }) => {
-  const [articles, setArticles] = useState([]);
+const NewsFeed = ({today}) => {
+    const [articles, setArticles] = useState([]);
 
-  useEffect(() => {
-    if (localStorage.getItem("date") === format(today, "yyyy-MM-dd")) {
-      console.log("Local storage is fine");
-      setArticles(JSON.parse(localStorage.getItem("articles")));
-    } else {
-      console.log("LOCAL STORAGE: needs to be updated");
-
-      fetch(
-        "https://google-news.p.rapidapi.com/v1/geo_headlines?lang=en&country=CA&geo=Montreal",
-        {
-          method: "GET",
-          headers: {
-            "x-rapidapi-key": rapidKey,
-            "x-rapidapi-host": "google-news.p.rapidapi.com",
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((response) => {
-          console.log(response);
-          setArticles(response.articles.slice(0, 15));
-          localStorage.setItem("date", format(today, "yyyy-MM-dd"));
-          localStorage.setItem("articles", JSON.stringify(response.articles));
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+    const fetchNews = () => {
+        fetch(
+            // "https://google-news.p.rapidapi.com/v1/geo_headlines?lang=en&country=CA&geo=Montreal",
+            "https://google-news-api1.p.rapidapi.com/search?language=en",
+            {
+                method: "GET",
+                headers: {
+                    "x-rapidapi-key": rapidKey,
+                    "x-rapidapi-host": "google-news-api1.p.rapidapi.com",
+                },
+            }
+        )
+            .then((res) => res.json())
+            .then((response) => {
+                console.log(response);
+                const articles = response.news.news?.slice(0, 15);
+                setArticles(articles);
+                if (response.news.news) {
+                    localStorage.setItem("date", format(today, "yyyy-MM-dd"));
+                    localStorage.setItem("articles", JSON.stringify(articles));
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     }
-  }, [today]);
 
-  let colorIndex = 0;
+    useEffect(() => {
+        // localStorage.removeItem("date");
+        // localStorage.removeItem("articles");
+        if (localStorage.getItem("date") === format(today, "yyyy-MM-dd")) {
+            console.log("Local storage is fine");
+            var arts = localStorage.getItem("articles");
+            if (arts && arts !== 'undefined') setArticles(JSON.parse(arts));
+        } else {
+            console.log("LOCAL STORAGE: needs to be updated");
+            fetchNews();
+        }
+    }, [today]);
 
-  if (articles) {
-    return (
-      <Wrapper>
-        {articles.map((article) => {
-          return (
-            <AnchorBox target="_blank" href={article.link} key={article.id}>
-              <ArticleBox
-                style={{
-                  backgroundColor: `${dayColors[colorIndex++]}`,
-                }}
-              >
-                <Title>
-                  {article.title.slice(0, article.title.indexOf(" - "))}
-                </Title>
-                <Source>{article.source.title}</Source>
-                <Date>
-                  {article.published.slice(
-                    0,
-                    article.published.indexOf("2021") + 4
-                  )}
-                </Date>
-              </ArticleBox>
-            </AnchorBox>
-          );
-        })}
-      </Wrapper>
-    );
-  } else {
-    return <></>;
-  }
+    let colorIndex = 0;
+
+    if (articles) {
+        return (
+            <Wrapper>
+                {articles.map((article) => {
+                    return (
+                        <AnchorBox target="_blank" href={article.link} key={article.id}>
+                            <ArticleBox
+                                style={{
+                                    backgroundColor: `${dayColors[colorIndex++]}`,
+                                }}
+                            >
+                                <Title>
+                                    {article.title?.slice(0, article.title.indexOf(" - "))}
+                                </Title>
+                                <Source>{article.source.title}</Source>
+                                <Date>
+                                    {article.published?.slice(
+                                        0,
+                                        article.published.indexOf("2021") + 4
+                                    )}
+                                </Date>
+                            </ArticleBox>
+                        </AnchorBox>
+                    );
+                })}
+            </Wrapper>
+        );
+    } else {
+        return <></>;
+    }
 };
 
 const Wrapper = styled.div`

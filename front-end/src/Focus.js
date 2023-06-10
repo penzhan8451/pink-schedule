@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
-import { useHistory } from "react-router-dom";
+import React, {useState} from "react";
+import styled, {keyframes} from "styled-components";
 import NewEventDialog from "./Components/NewEventDialog";
 
 const Focus = () => {
-  const [task_time, setTaskTime] = useState(25);
-  const [shortBreak, setShortBreak] = useState(5);
-  const [longBreak, setLongBreak] = useState(15);
-  return (
-    <Wrapper>
-      <div>Focus</div>
-      <div>
-        {" "}
-        <CircleContainer>
-          <Circle r="18" cx="20" cy="20"></Circle>
-        </CircleContainer>
-      </div>
+    const [task_time, setTaskTime] = useState(25);
+    const [shortBreak, setShortBreak] = useState(5);
+    const [longBreak, setLongBreak] = useState(15);
+    return (
+        <Wrapper>
+            <div>Focus</div>
+            <div>
+                {" "}
+                <CircleContainer>
+                    <Circle r="18" cx="20" cy="20"></Circle>
+                </CircleContainer>
+            </div>
 
-      <NewEventDialog />
-    </Wrapper>
-  );
+            <NewEventDialog/>
+        </Wrapper>
+    );
 };
 
 const Wrapper = styled.div`

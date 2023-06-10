@@ -1,18 +1,18 @@
 import React from "react";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import picture from "./img.png";
 
 const NoEventToday = () => {
-  let history = useHistory();
+    let history = useHistory();
 
-  return (
-    <Wrapper>
-      <p>You have nothing planned for the day!</p>
-      <p className="TapMsg">Tap " + " to add a task.</p>
-      <Img src={picture} />
-    </Wrapper>
-  );
+    return (
+        <Wrapper>
+            <p>You have nothing planned for the day!</p>
+            <p className="TapMsg">Tap " + " to add a task.</p>
+            <Img src={picture}/>
+        </Wrapper>
+    );
 };
 const Wrapper = styled.div`
   text-align: center;

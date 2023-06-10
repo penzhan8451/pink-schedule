@@ -1,72 +1,71 @@
-import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router";
+import React from "react";
 import styled from "styled-components";
-import { COLORS, dayColors } from "../Constants";
-import { GrLocation } from "react-icons/gr";
+import {dayColors} from "../Constants";
+import {GrLocation} from "react-icons/gr";
 
 import DeleteEventDialog from "../Components/DeleteEventDialog";
 import EditEventDialog from "../Components/EditEventDialog";
 
-const SingleEvent = ({ dayEvents, refreshEvents }) => {
-  let colorIndex = 0;
-  return (
-    <>
-      {dayEvents.map((dayEvent) => (
-        <SingleEventBox>
-          <TimeBox>
-            {dayEvent.start.time.allday ? (
-              <div>All day</div>
-            ) : (
-              <>
-                <div style={{ fontWeight: "500" }}>
-                  {dayEvent.start.time.hours}:{dayEvent.start.time.minutes}{" "}
-                  {dayEvent.start.time.ap}
-                </div>
-                <div style={{ fontWeight: "300" }}>
-                  {dayEvent.end.time.hours}:{dayEvent.end.time.minutes}{" "}
-                  {dayEvent.end.time.ap}
-                </div>
-              </>
-            )}
-          </TimeBox>
-          <div className="RightBox">
-            <EventContentBox
-              style={{
-                borderLeft: `5px solid ${dayColors[colorIndex++]}`,
-              }}
-            >
-              <div className="nameNdesc">
-                <EventTitle>{dayEvent.title}</EventTitle>
-                {dayEvent.description ? (
-                  <EventDescr>{dayEvent.description}</EventDescr>
-                ) : null}
-              </div>
-              {dayEvent.location ? (
-                <EventLocation>
-                  <GrLocation size="13" /> {dayEvent.location}
-                </EventLocation>
-              ) : null}
-            </EventContentBox>
+const SingleEvent = ({dayEvents, refreshEvents}) => {
+    let colorIndex = 0;
+    return (
+        <>
+            {dayEvents.map((dayEvent, index) => (
+                <SingleEventBox key={'singlebox-' + index}>
+                    <TimeBox key={'timebox-' + index}>
+                        {dayEvent.start.time.allday ? (
+                            <div key={'allday-' + index}>All day</div>
+                        ) : (
+                            <>
+                                <div key={'starttime-' + index} style={{fontWeight: "500"}}>
+                                    {dayEvent.start.time.hours}:{dayEvent.start.time.minutes}{" "}
+                                    {dayEvent.start.time.ap}
+                                </div>
+                                <div key={'endtime-' + index} style={{fontWeight: "300"}}>
+                                    {dayEvent.end.time.hours}:{dayEvent.end.time.minutes}{" "}
+                                    {dayEvent.end.time.ap}
+                                </div>
+                            </>
+                        )}
+                    </TimeBox>
+                    <div key={'rightbox-' + index} className="RightBox">
+                        <EventContentBox
+                            style={{
+                                borderLeft: `5px solid ${dayColors[colorIndex++]}`,
+                            }}
+                        >
+                            <div className="nameNdesc">
+                                <EventTitle>{dayEvent.title}</EventTitle>
+                                {dayEvent.description ? (
+                                    <EventDescr>{dayEvent.description}</EventDescr>
+                                ) : null}
+                            </div>
+                            {dayEvent.location ? (
+                                <EventLocation>
+                                    <GrLocation size="13"/> {dayEvent.location}
+                                </EventLocation>
+                            ) : null}
+                        </EventContentBox>
 
-            <EventButtonBox>
-              <EventButtons>
-                <EditEventDialog
-                  currentEvent={dayEvent}
-                  refreshEvents={refreshEvents}
-                />
-              </EventButtons>
-              <EventButtons>
-                <DeleteEventDialog
-                  eventId={dayEvent._id}
-                  refreshEvents={refreshEvents}
-                />
-              </EventButtons>
-            </EventButtonBox>
-          </div>
-        </SingleEventBox>
-      ))}
-    </>
-  );
+                        <EventButtonBox>
+                            <EventButtons>
+                                <EditEventDialog
+                                    currentEvent={dayEvent}
+                                    refreshEvents={refreshEvents}
+                                />
+                            </EventButtons>
+                            <EventButtons>
+                                <DeleteEventDialog
+                                    eventId={dayEvent._id}
+                                    refreshEvents={refreshEvents}
+                                />
+                            </EventButtons>
+                        </EventButtonBox>
+                    </div>
+                </SingleEventBox>
+            ))}
+        </>
+    );
 };
 
 const SingleEventBox = styled.div`
@@ -75,9 +74,11 @@ const SingleEventBox = styled.div`
   border-bottom: 2px solid #dae2f1;
   font-weight: 300;
   padding: 15px 0;
+
   .nameNdesc {
     padding-bottom: 6px;
   }
+
   .RightBox {
     width: 100%;
     display: flex;

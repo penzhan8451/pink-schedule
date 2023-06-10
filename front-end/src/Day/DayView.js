@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router";
+import React, {useEffect, useState} from "react";
+import {useHistory, useParams} from "react-router-dom";
 import styled from "styled-components";
-import { COLORS, dayColors } from "../Constants";
-import { GrLocation } from "react-icons/gr";
-import { AiOutlineHome } from "react-icons/ai";
-import { BiArrowBack } from "react-icons/bi";
+import {COLORS} from "../Constants";
+import {AiOutlineHome} from "react-icons/ai";
+import {BiArrowBack} from "react-icons/bi";
 
 import NoEventToday from "./NoEventToday";
 import NewEventDialog from "../Components/NewEventDialog";
@@ -12,81 +11,83 @@ import NewEventDialog from "../Components/NewEventDialog";
 import DateSection from "./DateSection";
 import SingleEvent from "./SingleEvent";
 
+import {server_url} from "../key";
+
 const DayView = () => {
-  const [dayEvents, setDayEvents] = useState([]);
-  const [status, setStatus] = useState("loading");
-  const history = useHistory();
-  const params = useParams();
-  const today = new Date(
-    params.date.slice(0, 4),
-    params.date.slice(5, 7) - 1,
-    params.date.slice(8, 10)
-  );
+    const [dayEvents, setDayEvents] = useState([]);
+    const [status, setStatus] = useState("loading");
+    const history = useHistory();
+    const params = useParams();
+    const today = new Date(
+        params.date.slice(0, 4),
+        params.date.slice(5, 7) - 1,
+        params.date.slice(8, 10)
+    );
 
-  useEffect(() => {
-    setStatus("loading");
-    fetch(`/events/date/${params.date}`)
-      .then((res) => res.json())
-      .then((res) => {
-        setDayEvents(res.data);
-        setStatus("idle");
-      })
-      .catch((error) => console.log("error!", error));
-  }, [params]);
+    useEffect(() => {
+        setStatus("loading");
+        fetch(`${server_url}/events/date/${params.date}`)
+            .then((res) => res.json())
+            .then((res) => {
+                setDayEvents(res.data);
+                setStatus("idle");
+            })
+            .catch((error) => console.log("error!", error));
+    }, [params]);
 
-  const getDayEventsAfterDeleteAdd = async () => {
-    setStatus("loading");
-    await fetch(`/events/date/${params.date}`)
-      .then((res) => res.json())
-      .then((res) => {
-        setDayEvents(res.data);
-        setStatus("idle");
-      })
-      .catch((error) => console.log("error!", error));
-  };
+    const getDayEventsAfterDeleteAdd = async () => {
+        setStatus("loading");
+        await fetch(`${server_url}/events/date/${params.date}`)
+            .then((res) => res.json())
+            .then((res) => {
+                setDayEvents(res.data);
+                setStatus("idle");
+            })
+            .catch((error) => console.log("error!", error));
+    };
 
-  return (
-    <Wrapper>
-      <NewEventDialog refreshEvents={getDayEventsAfterDeleteAdd} />
-      <Tabs>
-        <NavIcon>
-          <AiOutlineHome onClick={() => history.push("/")} size={30} />
-        </NavIcon>
-        <NavIcon>
-          <BiArrowBack onClick={() => history.goBack()} size={30} />
-        </NavIcon>
-        <TabItem
-          onClick={() => history.push("/calendar-month")}
-          style={{ backgroundColor: "#b5cdfd" }}
-        >
-          month
-        </TabItem>
-        <TabItem
-          style={{ backgroundColor: "#b5cdfd" }}
-          onClick={() => history.push(`/week/${params.date}`)}
-        >
-          week
-        </TabItem>
-        <TabItem>Day</TabItem>
-      </Tabs>
-      <DateSection today={today} />
+    return (
+        <Wrapper>
+            <NewEventDialog refreshEvents={getDayEventsAfterDeleteAdd}/>
+            <Tabs>
+                <NavIcon>
+                    <AiOutlineHome onClick={() => history.push("/")} size={30}/>
+                </NavIcon>
+                <NavIcon>
+                    <BiArrowBack onClick={() => history.goBack()} size={30}/>
+                </NavIcon>
+                <TabItem
+                    onClick={() => history.push("/calendar-month")}
+                    style={{backgroundColor: "#b5cdfd"}}
+                >
+                    month
+                </TabItem>
+                <TabItem
+                    style={{backgroundColor: "#b5cdfd"}}
+                    onClick={() => history.push(`/week/${params.date}`)}
+                >
+                    week
+                </TabItem>
+                <TabItem>Day</TabItem>
+            </Tabs>
+            <DateSection today={today}/>
 
-      {status === "loading" ? null : (
-        <ContentSection>
-          {dayEvents.length === 0 ? (
-            <NoEventToday />
-          ) : (
-            <>
-              <SingleEvent
-                dayEvents={dayEvents}
-                refreshEvents={getDayEventsAfterDeleteAdd}
-              />
-            </>
-          )}
-        </ContentSection>
-      )}
-    </Wrapper>
-  );
+            {status === "loading" ? null : (
+                <ContentSection>
+                    {dayEvents.length === 0 ? (
+                        <NoEventToday/>
+                    ) : (
+                        <>
+                            <SingleEvent
+                                dayEvents={dayEvents}
+                                refreshEvents={getDayEventsAfterDeleteAdd}
+                            />
+                        </>
+                    )}
+                </ContentSection>
+            )}
+        </Wrapper>
+    );
 };
 
 const Wrapper = styled.div`
