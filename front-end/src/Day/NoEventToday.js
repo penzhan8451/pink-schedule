@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import picture from "./img.png";
 
 const NoEventToday = () => {
-    let history = useHistory();
+    let history = useNavigate();
 
     return (
         <Wrapper>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useHistory, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import styled from "styled-components";
 import {COLORS} from "../Constants";
 import {AiOutlineHome} from "react-icons/ai";
@@ -16,7 +16,7 @@ import {server_url} from "../key";
 const DayView = () => {
     const [dayEvents, setDayEvents] = useState([]);
     const [status, setStatus] = useState("loading");
-    const history = useHistory();
+    const history = useNavigate();
     const params = useParams();
     const today = new Date(
         params.date.slice(0, 4),
@@ -51,20 +51,20 @@ const DayView = () => {
             <NewEventDialog refreshEvents={getDayEventsAfterDeleteAdd}/>
             <Tabs>
                 <NavIcon>
-                    <AiOutlineHome onClick={() => history.push("/")} size={30}/>
+                    <AiOutlineHome onClick={() => history("/")} size={30}/>
                 </NavIcon>
                 <NavIcon>
                     <BiArrowBack onClick={() => history.goBack()} size={30}/>
                 </NavIcon>
                 <TabItem
-                    onClick={() => history.push("/calendar-month")}
+                    onClick={() => history("/calendar-month")}
                     style={{backgroundColor: "#b5cdfd"}}
                 >
                     month
                 </TabItem>
                 <TabItem
                     style={{backgroundColor: "#b5cdfd"}}
-                    onClick={() => history.push(`/week/${params.date}`)}
+                    onClick={() => history(`/week/${params.date}`)}
                 >
                     week
                 </TabItem>

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import styled from "styled-components";
 import Calendar from "react-calendar";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {format} from "date-fns";
 
 const MyCalendar = ({updateCurrentMonth}) => {
@@ -13,11 +13,11 @@ const MyCalendar = ({updateCurrentMonth}) => {
     }
 
     /** OnClick function to go to daily view*/
-    let history = useHistory();
+    let history = useNavigate();
 
     const handleClickDate = (value) => {
         let formattedDate = format(value, "y-MM-dd");
-        history.push(`/date/${formattedDate}`);
+        history(`/date/${formattedDate}`);
     };
 
     const tileContent = ({date, view}) =>

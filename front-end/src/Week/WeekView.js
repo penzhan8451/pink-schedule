@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {COLORS} from "../Constants";
-import {useHistory, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {format} from "date-fns";
 import {AiOutlineHome} from "react-icons/ai";
 import {BiArrowBack} from "react-icons/bi";
@@ -9,7 +9,7 @@ import NewEventDialog from "../Components/NewEventDialog";
 import {server_url} from "../key";
 
 const WeekView = () => {
-    let history = useHistory();
+    let history = useNavigate();
     let params = useParams();
     // console.log("userParams.date:\t" + params.date);
 
@@ -112,7 +112,7 @@ const WeekView = () => {
         setToday(nextDay);
 
         let nextWeekDay = format(nextDay, "y-MM-dd");
-        history.push(`/week/${nextWeekDay}`);
+        history(`/week/${nextWeekDay}`);
     };
 
     const previousWeek = () => {
@@ -121,7 +121,7 @@ const WeekView = () => {
         setToday(prevDay);
 
         let preWeekDay = format(prevDay, "y-MM-dd");
-        history.push(`/week/${preWeekDay}`);
+        history(`/week/${preWeekDay}`);
     };
 
     return (
@@ -129,21 +129,21 @@ const WeekView = () => {
             <NewEventDialog refreshEvents={refreshAfterNewEvent}/>
             <Tabs>
                 <NavIcon>
-                    <AiOutlineHome onClick={() => history.push("/")} size={30}/>
+                    <AiOutlineHome onClick={() => history("/")} size={30}/>
                 </NavIcon>
                 <NavIcon>
                     <BiArrowBack onClick={() => history.goBack()} size={30}/>
                 </NavIcon>
                 <TabItem
-                    onClick={() => history.push("/calendar-month")}
+                    onClick={() => history("/calendar-month")}
                     style={{backgroundColor: "#b5cdfd"}}
                 >
                     month
                 </TabItem>
-                <TabItem onClick={() => history.push(`/week/${params.date}`)}>week</TabItem>
+                <TabItem onClick={() => history(`/week/${params.date}`)}>week</TabItem>
                 <TabItem
                     style={{backgroundColor: "#b5cdfd"}}
-                    onClick={() => history.push(`/date/${format(new Date(), "y-MM-dd")}`)}
+                    onClick={() => history(`/date/${format(new Date(), "y-MM-dd")}`)}
                 >
                     Day
                 </TabItem>
@@ -175,7 +175,7 @@ const WeekView = () => {
                         return (
                             <DateContainer key={'datecontainer-1-' + index}
                                            onClick={(ev) => {
-                                               history.push(`/date/${weekDay.date}`);
+                                               history(`/date/${weekDay.date}`);
                                            }}
                             >
                                 <div key={'weekdate-' + index}
@@ -208,7 +208,7 @@ const WeekView = () => {
                             <DateContainer key={'datecontainer-2-' + index}>
                                 <WEDateContainer key={'wedatecontainer-' + index}
                                                  onClick={(ev) => {
-                                                     history.push(`/date/${weekDay.date}`);
+                                                     history(`/date/${weekDay.date}`);
                                                  }}
                                 >
                                     <div key={'week-date-class' + index} className="week-date">
@@ -237,7 +237,7 @@ const WeekView = () => {
                                 </WEDateContainer>
                                 <WEDateContainer key={'wedatecontainer-3-' + index}
                                                  onClick={(ev) => {
-                                                     history.push(`/date/${weekEvents[6].date}`);
+                                                     history(`/date/${weekEvents[6].date}`);
                                                  }}
                                 >
                                     <div className="week-date">

@@ -3,7 +3,7 @@ import styled, {keyframes} from "styled-components";
 import {COLORS, dateColors} from "../Constants";
 import MyCalendar from "./MyCalendar";
 import NewEventDialog from "../Components/NewEventDialog";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {format} from "date-fns";
 import {AiOutlineHome} from "react-icons/ai";
 import {BiArrowBack} from "react-icons/bi";
@@ -12,7 +12,7 @@ import noEventToday from "./img.png";
 import {server_url} from "../key";
 
 const CalendarView = () => {
-    const history = useHistory();
+    const history = useNavigate();
     const [status, setStatus] = useState("loading");
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [MonthEvents, setMonthEvents] = useState([]);
@@ -53,21 +53,21 @@ const CalendarView = () => {
 
             <Tabs>
                 <NavIcon>
-                    <AiOutlineHome onClick={() => history.push("/")} size={30}/>
+                    <AiOutlineHome onClick={() => history("/")} size={30}/>
                 </NavIcon>
                 <NavIcon>
                     <BiArrowBack onClick={() => history.goBack()} size={30}/>
                 </NavIcon>
-                <TabItem onClick={() => history.push("/calendar-month")}>month</TabItem>
+                <TabItem onClick={() => history("/calendar-month")}>month</TabItem>
                 <TabItem
-                    onClick={() => history.push(`/week/${format(new Date(), "y-MM-dd")}`)}
+                    onClick={() => history(`/week/${format(new Date(), "y-MM-dd")}`)}
                     style={{backgroundColor: "#b5cdfd"}}
                 >
                     week
                 </TabItem>
                 <TabItem
                     style={{backgroundColor: "#b5cdfd"}}
-                    onClick={() => history.push(`/date/${format(new Date(), "y-MM-dd")}`)}
+                    onClick={() => history(`/date/${format(new Date(), "y-MM-dd")}`)}
                 >
                     Day
                 </TabItem>
@@ -87,7 +87,7 @@ const CalendarView = () => {
                         {MonthEvents.map((ev, index) => (
                             <EventBox key={'eventbox-' + index}
                                       onClick={() =>
-                                          history.push(`/date/${format(new Date(ev.date), "y-MM-dd")}`)
+                                          history(`/date/${format(new Date(ev.date), "y-MM-dd")}`)
                                       }
                             >
                                 <DateBox key={'datebox-' + index} style={{backgroundColor: dateColors[++colorIndex]}}>

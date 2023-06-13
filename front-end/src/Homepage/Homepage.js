@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {COLORS} from "../Constants";
 import {format} from "date-fns";
 import {GoCalendar} from "react-icons/go";
@@ -12,10 +12,11 @@ import Weather from "./Weather";
 
 //const server_url = 'http://localhost:8001';
 import {server_url} from "../key";
+import NewsFeed from "./NewsFeed";
 
 const Homepage = () => {
     const today = new Date();
-    const history = useHistory();
+    const history = useNavigate();
 
     const [dayEvents, setDayEvents] = useState([]);
 
@@ -84,26 +85,26 @@ const Homepage = () => {
             <ActionSec>
                 <ActionIcon
                     onClick={(ev) => {
-                        history.push(`/date/${format(today, "y-MM-dd")}`);
+                        history(`/date/${format(today, "y-MM-dd")}`);
                     }}
                 >
                     <MdToday size="40" color={`${COLORS.icon1}`}/>
                     <IconText>Today</IconText>
                 </ActionIcon>
                 <ActionIcon
-                    onClick={() => history.push(`/week/${format(today, "y-MM-dd")}`)}
+                    onClick={() => history(`/week/${format(today, "y-MM-dd")}`)}
                 >
                     <BiCalendarWeek size="40" color={`${COLORS.icon1}`}/>
                     <IconText>Week</IconText>
                 </ActionIcon>
-                <ActionIcon onClick={() => history.push("/calendar-month")}>
+                <ActionIcon onClick={() => history("/calendar-month")}>
                     <GoCalendar size="40" color={`${COLORS.icon1}`}/>
                     <IconText>Month</IconText>
                 </ActionIcon>
             </ActionSec>
             <Focus>Focus Mode</Focus>
-            <Weather/>
-            {/*<NewsFeed today={today}/>*/}
+            {/*<Weather/>*/}
+            <NewsFeed today={today}/>
             <NewEventDialog refreshEvents={getDayEvents}/>
         </Wrapper>
     );

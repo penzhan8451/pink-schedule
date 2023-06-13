@@ -1,6 +1,6 @@
 import React from "react";
 import GlobalStyles from "./GlobalStyles";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Switch} from "react-router-dom";
 
 import Homepage from "./Homepage/Homepage";
 import CalendarView from "./Calendar/CalendarView";
@@ -12,23 +12,23 @@ function App() {
     return (
         <Router>
             <GlobalStyles/>
-            <Switch>
-                <Route exact path="/">
-                    <Homepage/>
+            <Routes>
+                <Route exact path="/" element={<Homepage />}>
+                    {/*<Homepage/>*/}
                 </Route>
-                <Route exact path="/calendar-month">
-                    <CalendarView/>
+                <Route exact path="/calendar-month" element={<CalendarView />}>
+                    {/*<CalendarView/>*/}
                 </Route>
-                <Route exact path="/date/:date">
-                    <DayView/>
+                <Route exact path="/date/:date" element={<DayView />}>
+                    {/*<DayView/>*/}
                 </Route>
-                <Route exact path="/week/:date">
-                    <WeekView/>
+                <Route exact path="/week/:date" element={<WeekView />}>
+                    {/*<WeekView/>*/}
                 </Route>
-                <Route exact path="/focus">
-                    <Focus/>
+                <Route exact path="/focus" element={<Focus />}>
+                    {/*<Focus/>*/}
                 </Route>
-            </Switch>
+            </Routes>
         </Router>
     );
 }

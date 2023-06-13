@@ -1,26 +1,26 @@
 import React from "react";
 import styled from "styled-components";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {COLORS} from "../Constants";
 import {format} from "date-fns";
 import {AiOutlineArrowLeft, AiOutlineArrowRight} from "react-icons/ai";
 
 const DateSection = ({today}) => {
-    let history = useHistory();
+    let history = useNavigate();
 
     const nextDay = () => {
         let nextDay = new Date(today);
         nextDay.setDate(today.getDate() + 1);
         let nextDayString = format(nextDay, "y-MM-dd");
         // console.log('nextDayString:\t' + nextDayString);
-        history.push(`/date/${nextDayString}`);
+        history(`/date/${nextDayString}`);
     };
     const previousDay = () => {
         let preDay = new Date(today);
         preDay.setDate(today.getDate() - 1);
         let preDayString = format(preDay, "y-MM-dd");
         // console.log('preDayString:\t' + preDayString);
-        history.push(`/date/${preDayString}`);
+        history(`/date/${preDayString}`);
     };
     return (
         <Header>

@@ -6,26 +6,9 @@ const Weather = () => {
     const [weather, setWeather] = useState(null);
     const [location, setLocation] = useState(null);
     const url = 'https://weatherapi-com.p.rapidapi.com/current.json?q=40.2%2C116.2';
-    const timezoneapi = async () => {
-        const timzoneurl = 'https://weatherapi-com.p.rapidapi.com/timezone.json?q=%3CREQUIRED%3E';
-        const options = {
-            method: 'GET',
-            headers: {
-                'X-RapidAPI-Key': 'f5d68fb533msh0d9375110c6709dp16f5cfjsna0cb3407c4dc',
-                'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com'
-            }
-        };
 
-        try {
-            const response = await fetch(timzoneurl, options);
-            const result = await response.text();
-            console.log(result);
-        } catch (error) {
-            console.error(error);
-        }
-    }
     useEffect(() => {
-        // timezoneapi();
+
         fetch(
             // "https://weatherbit-v1-mashape.p.rapidapi.com/current?lon=-73.5673&lat=45.5017",
             url,
@@ -41,8 +24,8 @@ const Weather = () => {
             .then((res) => res.json())
             .then((response) => {
                 if (response.current) {
-                    console.log(response.current);
-                    console.log(response.location);
+                    // console.log(response.current);
+                    // console.log(response.location);
                     setLocation(response.location);
                     setWeather(response.current);
                 }
